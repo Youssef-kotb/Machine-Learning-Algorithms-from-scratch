@@ -10,8 +10,11 @@ def MSE_gradient(actual_outputs, values_vector , parameters_vector):
     return gradient_vector
 
 class gradient_descent:
+
     def __init__(self, learning_rate=0.01, max_iterations=1000):
         
+        self.name = "Gradient Descent Optimizer"
+
         # cost_function should be a callable that takes parameters and returns a scalar cost
         self.cost_function = None
         self.learning_rate = learning_rate
