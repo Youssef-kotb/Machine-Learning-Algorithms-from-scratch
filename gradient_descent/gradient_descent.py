@@ -9,6 +9,17 @@ def MSE_gradient(actual_outputs, values_vector , parameters_vector):
     gradient_vector = 2/n * np.dot(values_vector.T, (pred - actual_outputs))
     return gradient_vector
 
+
+def binary_crossentropy_gradient(actual_outputs, values_vector , parameters_vector):
+    # Implement the gradient calculation for Binary Cross-Entropy
+    n = len(actual_outputs)
+
+    pred = 1 / (1 + np.exp(-np.dot(values_vector, parameters_vector))) # Sigmoid function
+    
+    gradient_vector = 1/n * np.dot(values_vector.T, (pred - actual_outputs))
+    return gradient_vector
+
+
 class gradient_descent:
 
     def __init__(self, learning_rate=0.01, max_iterations=1000):
@@ -27,6 +38,9 @@ class gradient_descent:
         
         elif self.cost_function == 'MSE':
             self.gradient_vector = MSE_gradient(actual_outputs, values_vector , parameters_vector)
+        
+        elif self.cost_function == 'binary_crossentropy':
+            self.gradient_vector = binary_crossentropy_gradient(actual_outputs, values_vector , parameters_vector)
         
         next_step_parameters_vector = parameters_vector - self.learning_rate * self.gradient_vector
         
