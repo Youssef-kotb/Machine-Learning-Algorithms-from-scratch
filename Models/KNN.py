@@ -4,7 +4,7 @@ from collections import Counter
 def euclidean_distance(point1, point2):
     return np.sqrt(np.sum((point1 - point2) ** 2))
 
-class knn():
+class KNN:
 
     def __init__(self, k_neighbors=3):
         self.k_neighbors = k_neighbors

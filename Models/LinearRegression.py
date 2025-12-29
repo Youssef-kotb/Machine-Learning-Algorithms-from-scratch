@@ -1,21 +1,8 @@
 import numpy as np
-from gradient_descent.gradient_descent import gradient_descent
-
-def run_gradient_descent(X, y, weights ,epochs, optimizer):
-
-    print("Performing Gradient Descent for", epochs, "epochs.")
-    for epoch in range(epochs):
-        print(f"Epoch {epoch+1}/{epochs}")
-
-        weights = optimizer.step(actual_outputs=y, values_vector=X , parameters_vector=weights)
-
-    return weights
 
 
-
-
-class linear_regression:
-    def __init__(self, optimizer, cost_function='MSE'):
+class LinearRegression:
+    def __init__(self, optimizer, cost_function):
         self.optimizer = optimizer
         self.cost_function = cost_function
         self.optimizer.cost_function = cost_function
@@ -40,11 +27,11 @@ class linear_regression:
 
 
 
-        if self.optimizer.name == "Gradient Descent Optimizer":
-            final_weights = run_gradient_descent(X,y,self.weights,epochs, self.optimizer)
+        # Run optimization
+        for epoch in range(epochs):
+            print(f"Epoch {epoch+1}/{epochs}")
+            self.weights = self.optimizer.step(true_outputs=y, X_values_vector=X , parameters_vector=self.weights)
 
-        
-        self.weights = final_weights
         return self.weights
     
 

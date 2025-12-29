@@ -1,20 +1,10 @@
-# implementing Logistic Regression from scratch
 import numpy as np
 
-def run_gradient_descent(X, y, weights, epochs, optimizer):
-
-    print("Performing Gradient Descent for", epochs, "epochs.")
-    for epoch in range(epochs):
-        print(f"Epoch {epoch+1}/{epochs}")
-
-        weights = optimizer.step(actual_outputs=y, values_vector=X, parameters_vector=weights)
-
-    return weights
 
 class LogisticRegression:
 
     # the constructor, it initializes the optimizer and cost function
-    def __init__(self, optimizer, cost_function='binary_crossentropy', threshold=0.5):
+    def __init__(self, optimizer, cost_function, threshold=0.5):
         self.optimizer = optimizer
         self.cost_function = cost_function
         self.optimizer.cost_function = cost_function
@@ -35,10 +25,11 @@ class LogisticRegression:
         # Initialize weights
         self.weights = np.zeros(X.shape[1])
 
-        if self.optimizer.name == "Gradient Descent Optimizer":
-            final_weights = run_gradient_descent(X, y, self.weights, epochs, self.optimizer)
-
-        self.weights = final_weights
+        # Run optimization
+        for epoch in range(epochs):
+            print(f"Epoch {epoch+1}/{epochs}")
+            self.weights = self.optimizer.step(true_outputs=y, X_values_vector=X , parameters_vector=self.weights)
+        
         return self.weights
     
     def predict(self, X):
