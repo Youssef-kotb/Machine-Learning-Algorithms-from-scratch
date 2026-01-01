@@ -16,34 +16,21 @@ class Iris:
         self.file_path = f"{self.download_path}/Iris.data"
 
         # checking if the dataset is already downloaded
-        if os.path.isdir(self.download_path):
-            self.downloaded = True
-        else:
-            self.downloaded = False
+        self.downloaded = os.path.exists(self.file_path)
 
 
-
-        #info
-        self.features = [
-        "sepal_length",
-        "sepal_width",
-        "petal_length",
-        "petal_width",
-        "species"
-        ]
-
-        self.target = [
-            "Iris-setosa",
-            "Iris-versicolor",
-            "Iris-virginica"
-        ]            
+       
             
     def load_data(self):
         
         if not self.downloaded:
             os.makedirs(self.download_path)
+            
+            try:
+                urllib.request.urlretrieve(self.url, self.file_path)
+            except Exception as e:
+                raise RuntimeError(f"Failed to download dataset: {e}")
 
-            urllib.request.urlretrieve(self.url, self.file_path)
             self.downloaded = True
         
         features, target = read_dataset(self.file_path)
@@ -61,7 +48,35 @@ class Iris:
 
         print ("Redownloaded the dataset successfully")
 
+    def info(self, download=False):
+        info = {
+            "name": "Iris",
+            "task": "Classification",
+            "source": "UCI ML Repository",
+            "downloaded": self.downloaded
+        }
 
+        if self.downloaded or download:
+            if not self.downloaded:
+                self.load_data()
+            columns = ["sepal_length", "sepal_width", "petal_length", "petal_width", "species"]
+            df = pd.read_csv(self.file_path, header=None, names=columns)
+            info.update({
+                "n_samples": len(df),
+                "n_features": 4,
+                "features": columns[:-1],
+                "target": "species",
+                "class_distribution": df["species"].value_counts().to_dict()
+            })
+        else:
+            info["data_info"] = (
+                "Dataset not downloaded. "
+                "Call info(download=True) or load_data() to see data-dependent info."
+            )
+
+        return info
+
+    
 def read_dataset(path):
 
     columns = [
